@@ -1,0 +1,39 @@
+---
+import {astroI18n, createGetStaticPaths} from "astro-i18n";
+import Layout from "../../../layouts/Layout.astro";
+
+// SSG mode with astro-i18n
+export const getStaticPaths = createGetStaticPaths( async () => {
+  const response = await fetch('http://localhost:3000')
+  const {data} = await response.json()
+  const currentSlugPath = `slug_${astroI18n.locale}`
+
+  return Array.from(data).map(item => {
+    astroI18n.addRoutes({
+      en: {
+        //@ts-ignore
+        [item.slug_pl]: item.slug_en,
+      },
+    })
+
+    // @ts-ignore
+    return {params: {slug: item[currentSlugPath]}, props: {
+      // @ts-ignore
+      // pass item data into the props object
+      name: item[currentSlugPath]
+    }}
+  })
+})
+
+
+
+// Get slug from params
+const slug = Astro.params.slug
+
+// Get name from props
+const { name } = Astro.props
+---
+
+<Layout>
+    <h1>{name} - SSG</h1>
+</Layout>
