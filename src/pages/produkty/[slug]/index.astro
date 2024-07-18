@@ -4,8 +4,8 @@ import Layout from "../../../layouts/Layout.astro";
 
 // SSG mode with astro-i18n
 export const getStaticPaths = createGetStaticPaths( async () => {
-  const response = await fetch('http://localhost:3000')
-  const {data} = await response.json()
+  const response = await fetch(import.meta.env.API_URL)
+  const data = await response.json()
   const currentSlugPath = `slug_${astroI18n.locale}`
 
   return Array.from(data).map(item => {
