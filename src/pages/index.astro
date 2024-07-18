@@ -1,4 +1,5 @@
 ---
+import { ReactComponent } from "../components/ReactComponent"
 import Layout from "../layouts/Layout.astro"
 import { t, l } from "astro-i18n"
 ---
@@ -6,4 +7,5 @@ import { t, l } from "astro-i18n"
 <Layout>
 	<h1>Astro: {t("home")}</h1>
 	<a href={l("/produkty")}>{t("products")}</a>
+	<ReactComponent />
 </Layout>
