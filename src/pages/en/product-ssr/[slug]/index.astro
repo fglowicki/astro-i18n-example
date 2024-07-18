@@ -1,0 +1,9 @@
+---
+import Page from "../../../produkty-ssr/[slug]/index.astro"
+import { getStaticPaths as proxyGetStaticPaths } from "../../../produkty-ssr/[slug]/index.astro"
+/* @ts-ignore */
+export const getStaticPaths = (props) => proxyGetStaticPaths({ ...props, astroI18n: { locale: "en", route: "/product-ssr/[slug]", primaryLocale: "pl", secondaryLocales: ["en"] } })
+export const prerender = false
+const { props } = Astro
+---
+<Page {...props} />

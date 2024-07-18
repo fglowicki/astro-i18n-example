@@ -1,0 +1,42 @@
+---
+
+import {astroI18n, createGetStaticPaths} from "astro-i18n";
+import Layout from "../../../layouts/Layout.astro";
+
+// SSR mode with astro-i18n
+export const prerender = false;
+
+// astro-i18n required it to be declared in dynamic path e.g [slug] for SSR mode.
+export const getStaticPaths = createGetStaticPaths(() => [{ params: { slug: Astro.params.slug } }])
+
+const slug = Astro.params.slug
+const response = await fetch(import.meta.env.API_URL) // we should pass slug as request param
+const data = await response.json()
+const item = data[0] as {slug_pl: string, slug_en: string};
+const currentSlugPath = `slug_${astroI18n.locale}`
+
+// @ts-ignore
+// Should redirect if user pass wrong slug
+const notFound = slug !== item[currentSlugPath];
+/*
+    The alternative is when when api return some error
+    const notFound = errorFromApi
+*/
+
+
+if(!notFound) {
+  // Add dynamic routes here
+  astroI18n.addRoutes({
+    en: {
+      [item.slug_pl]: item.slug_en,
+    },
+  })
+}
+
+---
+{notFound ? <meta http-equiv="refresh" content={`0;url=/404/`} /> : 
+  <Layout>
+      <h1>{slug} - SSR</h1>
+  </Layout>
+}
+

@@ -1,0 +1,18 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { t, l, astroI18n } from "astro-i18n"
+export const prerender = false;
+
+const response = await fetch(import.meta.env.API_URL) // pass slug as request param
+const data = await response.json()
+const currentSlugPath = `slug_${astroI18n.locale}`
+---
+
+<Layout>
+    <h1>{t("products")} - SSR </h1>
+
+    {Array.from(data).map((item) => {
+        // @ts-ignore
+        return <a href={l(`${astroI18n.route}/${item[currentSlugPath]}`)}>{item[currentSlugPath]}</a>;
+    })}
+</Layout>
